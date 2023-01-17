@@ -16,11 +16,26 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from django.conf import settings
+from drf_yasg import views, openapi
+from rest_framework import permissions
 
-admin.site.site_header = 'Medium Clone'
-admin.site.index_title = 'Medium Clone'
+admin.site.site_header = 'Medium Clone Admin'
+admin.site.index_title = 'Medium Clone Admin Portal'
+admin.site.site_title = "Welcome to Medium Clone API Portal"
 
+schema_view = views.get_schema_view(
+    openapi.Info(   
+      title="Medium Clone API",
+        default_version="v1",
+        description="API endpoints for the Medium Clone Application",
+        contact=openapi.Contact(email="adedayotoheeb@gmail.com"),
+        license=openapi.License(name="MIT License"),
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
+)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('__debug__/', include('debug_toolbar.urls')),
+    path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
 ]
