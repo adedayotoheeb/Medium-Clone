@@ -12,6 +12,15 @@ INTERNAL_IPS = [
     # ...
 ]
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': ROOT_DIR / 'db.sqlite3',
+    }
+}
+
+DATABASES["default"]["ATOMIC_REQUESTS"] = True
+
 DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.history.HistoryPanel',
     'debug_toolbar.panels.versions.VersionsPanel',

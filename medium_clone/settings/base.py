@@ -101,14 +101,7 @@ WSGI_APPLICATION = 'medium_clone.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': ROOT_DIR / 'db.sqlite3',
-    }
-}
 
-DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
 PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.Argon2PasswordHasher",
@@ -194,5 +187,10 @@ LOGGING = {
             'propagate': False,
         },
     }
+}
+
+REST_FRAMEWORK = {
+    "EXCEPTION_HANDLER":"core_apps.common.exceptions.common_exception_handler",
+    "NON_FIELD_ERRORS_KEY":"error",
 }
 
