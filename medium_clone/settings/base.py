@@ -14,6 +14,7 @@ from pathlib import Path
 import environ
 from decouple import config
 import os
+from datetime import timedelta
 
 env = environ.Env()
 
@@ -55,6 +56,9 @@ THIRD_PARTY_APPS = [
     "debug_toolbar",
     "drf_yasg",
     "corsheaders",
+    "rest_framework.authtoken",
+    'rest_framework_simplejwt',
+    'djoser',
 ]
 
 LOCAL_APPS = [
@@ -192,5 +196,40 @@ LOGGING = {
 REST_FRAMEWORK = {
     "EXCEPTION_HANDLER":"core_apps.common.exceptions.common_exception_handler",
     "NON_FIELD_ERRORS_KEY":"error",
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    )
+}
+
+SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('Bearer','JWT',),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=720),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': False,
+    'UPDATE_LAST_LOGIN': False,
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': config('JWT_SECRET_KEY'),
+}
+
+DJOSER = {
+    "LOGIN_FIELD":"email",
+    "USER_CREATE_PASSWORD_RETYPE":True,
+    "USERNAME_CHANGED_EMAIL_CONFIRMATION":True,
+    "PASSWORD_CHANGED_EMAIL_CONFIRMATION":True,
+    "SEND_CONFIRMATION_EMAIL":True,
+    "PASSWORD_RESET_CONFIRM_URL":"/password-reset/{uid}/{token}",
+    "SET_PASSWORD_RETYPE":True,
+    "PASSWORD_RESET_CONFIRM_RETYPE":True,
+    "USERNAME_RESET_CONFIRM_URL":"email/password-reset/{uid}/{token}",
+    "ACTIVATION_URL":"activate/{uid}/{token}",
+    "SEND_ACTIVATION_EMAIL":True,
+    "SERIALIZERS":{
+        "user_create": "core_apps.core.serializers.UserCreateSerializer",
+        "user": "core_apps.core.serializers.UserSerializer",
+        "current_user": "core_apps.core.serializers.UserSerializer",
+        "user_delete": "djoser.serializers.UserDeleteSerializer",
+    }
 }
 

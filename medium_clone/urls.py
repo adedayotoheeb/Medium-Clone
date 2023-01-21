@@ -34,8 +34,11 @@ schema_view = views.get_schema_view(
     public=True,
     permission_classes=(permissions.AllowAny,),
 )
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('__debug__/', include('debug_toolbar.urls')),
     path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
+    path("api/v1/auth", include('djoser.urls')),
+    path("api/v1/auth", include('djoser.urls.jwt')),
 ]
