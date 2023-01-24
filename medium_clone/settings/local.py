@@ -5,6 +5,7 @@ DEBUG  = True
 
 SECRET_KEY = config('SECRET_KEY')
 
+MIDDLEWARE.append("debug_toolbar.middleware.DebugToolbarMiddleware",)
 
 INTERNAL_IPS = [
     # ...

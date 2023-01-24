@@ -25,7 +25,7 @@ class Profile(TimeStampedUUIDModel):
         max_length=20,
     )
     country = CountryField(
-        verbose_name=_("country"), default="NGA", blank=False, null=False
+        verbose_name=_("country"), default="NG", blank=False, null=False
     )
     city = models.CharField(
         verbose_name=_("city"),
