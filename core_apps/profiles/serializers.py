@@ -4,7 +4,7 @@ from rest_framework import serializers
 from  . import models
 
 
-class ProfileSerializer(CountryFieldMixin,serializers.ModelSerializer):
+class ProfilesSerializer(CountryFieldMixin,serializers.ModelSerializer):
     username = serializers.CharField(source="user.username")
     first_name = serializers.CharField(source="user.first_name")
     last_name = serializers.CharField(source="user.last_name")

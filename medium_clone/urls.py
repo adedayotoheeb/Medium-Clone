@@ -21,7 +21,7 @@ from rest_framework import permissions
 
 admin.site.site_header = 'Medium Clone Admin'
 admin.site.index_title = 'Medium Clone Admin Portal'
-admin.site.site_title = "Welcome to Medium Clone API Portal"
+admin.site.site_title =  "Welcome to Medium Clone API Admin Portal"
 
 schema_view = views.get_schema_view(
     openapi.Info(   
@@ -40,6 +40,7 @@ urlpatterns = [
     path('__debug__/', include('debug_toolbar.urls')),
     path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
     path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path("api/v1/auth", include('djoser.urls')),
-    path("api/v1/auth", include('djoser.urls.jwt')),
+    path("api/v1/auth/", include('djoser.urls')),
+    path("api/v1/auth/", include('djoser.urls.jwt')),
+    path("api/v1/profiles/", include("core_apps.profiles.urls")),
 ]
