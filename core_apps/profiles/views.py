@@ -13,6 +13,7 @@ from . import serializers
 class ProfilesViewSet(ModelViewSet):
     http_method_names = ['get','put']
     # permission_classes = [permissions.IsAuthenticated]
+    renderer_classes= [renderers.ProfilesJSONRenderer]
     queryset = models.Profile.objects.select_related('user')
     lookup_field = 'user__username'
 

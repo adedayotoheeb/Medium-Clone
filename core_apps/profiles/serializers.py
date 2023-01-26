@@ -12,7 +12,7 @@ class ProfilesSerializer(CountryFieldMixin,serializers.ModelSerializer):
     full_name = serializers.SerializerMethodField(read_only=True,method_name="get_full_name")
     profile_photo = serializers.SerializerMethodField(method_name="get_profile_photo")
     country = CountryField(name_only=True)
-    following = serializers.SerializerMethodField(method_name="get_following")
+    following = serializers.SerializerMethodField(method_name="get_following",read_only=True)
 
     class Meta:
         model = models.Profile
