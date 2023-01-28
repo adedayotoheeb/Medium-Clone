@@ -59,12 +59,20 @@ THIRD_PARTY_APPS = [
     "rest_framework.authtoken",
     'rest_framework_simplejwt',
     'djoser',
+    'haystack',
+    'drf_haystack',
 ]
 
 LOCAL_APPS = [
     "core_apps.common",
     "core_apps.core",
     "core_apps.profiles",
+    "core_apps.ratings",
+    "core_apps.search",
+    "core_apps.reactions",
+    "core_apps.articles",
+    "core_apps.comments",
+    "core_apps.favourites",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -166,31 +174,7 @@ STATIC_URL = '/staticfiles/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "formatters": {
-        "verbose": {
-            "format": "%(levelname)s %(name)-12s %(asctime)s %(module)s "
-            "%(process)d %(thread)d %(message)s"
-        }
-    },
-    "handlers": {
-        "console": {
-            "level": "DEBUG",
-            "class": "logging.StreamHandler",
-            "formatter": "verbose",
-        }
-    },
-    "root": {"level": "INFO", "handlers": ["console"]},
-    "logger":{
-        "django":{
-            'handlers': ['console'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
-            'propagate': False,
-        },
-    }
-}
+
 
 REST_FRAMEWORK = {
     "EXCEPTION_HANDLER":"core_apps.common.exceptions.common_exception_handler",
@@ -235,3 +219,38 @@ DJOSER = {
     }
 }
 
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': ROOT_DIR/'whoosh_index',
+    },
+}
+HAYSTACK_SEARCH_RESULTS_PER_PAGE = 10
+
+HAYSTACK_SIGNAL_PROCESSOR = "haystack.signals.RealtimeSignalProcessor"
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "%(levelname)s %(name)-12s %(asctime)s %(module)s "
+            "%(process)d %(thread)d %(message)s"
+        }
+    },
+    "handlers": {
+        "console": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        }
+    },
+    "root": {"level": "INFO", "handlers": ["console"]},
+    "logger":{
+        "django":{
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': False,
+        },
+    }
+}
