@@ -38,7 +38,7 @@ class ArticleReadTimeEngine:
         details.extend(self.get_tags())
         return details
 
-    def get_read_time(self):
+    def get_read_time(self) -> int:
         word_length = len(self.get_article_details())
         read_time = 0
         self.check_article_has_banner_image()
@@ -46,7 +46,7 @@ class ArticleReadTimeEngine:
         if word_length:
             time_to_read = word_length / self.words_per_minute
             if time_to_read < 1:
-                read_time = (
+                read_time: int = (
                     str(round((time_to_read + self.banner_image_adjustment_time) * 60))
                     + " second(s)"
                 )
