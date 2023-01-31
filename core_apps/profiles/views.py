@@ -16,6 +16,7 @@ class ProfilesViewSet(ModelViewSet):
     renderer_classes= [renderers.ProfilesJSONRenderer]
     queryset = models.Profile.objects.select_related('user')
     lookup_field = 'user__username'
+    
 
     def get_serializer_context(self):
         return {'request': self.request}
@@ -23,8 +24,7 @@ class ProfilesViewSet(ModelViewSet):
     def get_serializer_class(self):
         if self.request.method == "GET":
             return serializers.ProfilesSerializer
-        elif self.request.method == "PUT":
-            return serializers.UpdateProfileSerializer
+        return serializers.UpdateProfileSerializer
 
 
 

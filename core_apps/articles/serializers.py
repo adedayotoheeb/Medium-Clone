@@ -25,8 +25,8 @@ class ArticleSerializer(serializers.ModelSerializer):
     tagList = TagRelatedField(many=True, required=False)
     comments = serializers.SerializerMethodField(method_name="get_comments", read_only=True)
     num_comments = serializers.SerializerMethodField(method_name="get_num_ratings")
-    created_at = serializers.SerializerMethodField()
-    updated_at = serializers.SerializerMethodField()
+    created_at = serializers.SerializerMethodField(method_name="get_created_at")
+    updated_at = serializers.SerializerMethodField(method_name="get_updated_at")
 
     def get_banner_image(self, obj):
         return obj.banner_image.url

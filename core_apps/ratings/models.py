@@ -4,15 +4,14 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from . import choices
 from core_apps.common.models import TimeStampedUUIDModel
+from core_apps.articles import models
 
 User = get_user_model()
 
 
 class Rating(TimeStampedUUIDModel):
-    
-
     article = models.ForeignKey(
-        "articles.Article", related_name="article_ratings", on_delete=models.CASCADE
+        models.Article, related_name="article_ratings", on_delete=models.CASCADE
     )
     rated_by = models.ForeignKey(
         User, related_name="user_who_rated", on_delete=models.CASCADE
