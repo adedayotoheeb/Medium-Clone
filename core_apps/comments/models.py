@@ -1,9 +1,10 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
-from core_apps.common.models import TimeStampedUUIDModel
 from core_apps.articles import models
+from core_apps.common.models import TimeStampedUUIDModel
 from core_apps.profiles import models
+
 User = get_user_model()
 
 

@@ -1,11 +1,9 @@
 from django.shortcuts import get_object_or_404
-from rest_framework.viewsets import ModelViewSet
-from rest_framework import permissions
-from rest_framework import status
+from rest_framework import permissions, status
 from rest_framework.response import Response
-from . import renderers
-from . import models
-from . import serializers
+from rest_framework.viewsets import ModelViewSet
+
+from . import models, renderers, serializers
 
 # Create your views here.
 

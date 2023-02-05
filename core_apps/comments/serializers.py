@@ -1,7 +1,8 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from rest_framework.viewsets import ModelViewSet
 
-from . import models 
+from . import models
 
 User = get_user_model()
 
@@ -12,12 +13,12 @@ class CommentSerializer(serializers.ModelSerializer):
 
     def get_created_at(self, obj):
         now = obj.created_at
-        formatted_date = now.strftime("%m/%d/%Y, %H:%M:%S")
+        formatted_date = now.strftime("%d/%m/%Y, %H:%M:%S")
         return formatted_date
 
     def get_updated_at(self, obj):
         then = obj.updated_at
-        formatted_date = then.strftime("%m/%d/%Y, %H:%M:%S")
+        formatted_date = then.strftime("%d/%m/%Y, %H:%M:%S")
         return formatted_date
 
     class Meta:
@@ -33,12 +34,12 @@ class CommentListSerializer(serializers.ModelSerializer):
 
     def get_created_at(self, obj):
         now = obj.created_at
-        formatted_date = now.strftime("%m/%d/%Y, %H:%M:%S")
+        formatted_date = now.strftime("%d/%m/%Y, %H:%M:%S")
         return formatted_date
 
     def get_updated_at(self, obj):
         then = obj.updated_at
-        formatted_date = then.strftime("%m/%d/%Y, %H:%M:%S")
+        formatted_date = then.strftime("%d/%m/%Y, %H:%M:%S")
         return formatted_date
 
     class Meta:

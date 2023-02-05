@@ -1,5 +1,6 @@
 from . import models
 
+
 class ArticleReadTimeEngine:
     def __init__(self, article):
         self.article = article

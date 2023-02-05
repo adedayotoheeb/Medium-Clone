@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 from core_apps.articles.models import Article
 from core_apps.common.models import TimeStampedUUIDModel
+from . import choices
 
 User = get_user_model()
 
@@ -22,16 +23,14 @@ class ReactionManager(models.Manager):
 
 
 class Reaction(TimeStampedUUIDModel):
-    class Reactions(models.IntegerChoices):
-        LIKE = 1, _("like")
-        DISLIKE = -1, _("dislike")
+   
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     article = models.ForeignKey(
         Article, on_delete=models.CASCADE, related_name="article_reactions"
     )
     reaction = models.IntegerField(
-        verbose_name=_("like-dislike"), choices=Reactions.choices
+        verbose_name=_("like-dislike"), choices=choices.Reactions.choices
     )
 
     objects = ReactionManager()

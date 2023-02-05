@@ -2,9 +2,11 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from . import choices
-from core_apps.common.models import TimeStampedUUIDModel
+
 from core_apps.articles import models
+from core_apps.common.models import TimeStampedUUIDModel
+
+from . import choices
 
 User = get_user_model()
 

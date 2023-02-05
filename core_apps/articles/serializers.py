@@ -3,8 +3,8 @@ from rest_framework import serializers
 from core_apps.comments.serializers import CommentListSerializer
 from core_apps.ratings.serializers import RatingSerializer
 
-from .custom_tag_field import TagRelatedField
 from . import models
+from .custom_tag_field import TagRelatedField
 
 
 class ArticleViewsSerializer(serializers.ModelSerializer):
@@ -33,12 +33,12 @@ class ArticleSerializer(serializers.ModelSerializer):
 
     def get_created_at(self, obj):
         now = obj.created_at
-        formatted_date = now.strftime("%m/%d/%Y, %H:%M:%S")
+        formatted_date = now.strftime("%d/%m/%Y, %H:%M:%S")
         return formatted_date
 
     def get_updated_at(self, obj):
         then = obj.updated_at
-        formatted_date = then.strftime("%m/%d/%Y, %H:%M:%S")
+        formatted_date = then.strftime("%d/%m/%Y, %H:%M:%S")
         return formatted_date
 
     def get_author_info(self, obj):
@@ -105,7 +105,7 @@ class ArticleCreateSerializer(serializers.ModelSerializer):
 
     def get_created_at(self, obj):
         now = obj.created_at
-        formatted_date = now.strftime("%m/%d/%Y, %H:%M:%S")
+        formatted_date = now.strftime("%d/%m/%Y, %H:%M:%S")
         return formatted_date
 
     def get_banner_image(self, obj):
@@ -122,5 +122,5 @@ class ArticleUpdateSerializer(serializers.ModelSerializer):
 
     def get_updated_at(self, obj):
         then = obj.updated_at
-        formatted_date = then.strftime("%m/%d/%Y, %H:%M:%S")
+        formatted_date = then.strftime("%d/%m/%Y, %H:%M:%S")
         return formatted_date

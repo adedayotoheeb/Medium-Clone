@@ -1,7 +1,8 @@
 from django_countries.serializer_fields import CountryField
 from django_countries.serializers import CountryFieldMixin
 from rest_framework import serializers
-from  . import models
+
+from . import models
 
 
 class ProfilesSerializer(CountryFieldMixin,serializers.ModelSerializer):

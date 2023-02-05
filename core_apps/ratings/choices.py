@@ -1,7 +1,5 @@
 from django.utils.translation import gettext_lazy as _
 
-
-
 RATING_1 = 1 
 RATING_2 = 2 
 RATING_3 = 3

@@ -1,7 +1,7 @@
 from django.urls import include, path
 from rest_framework import routers
-from . import views
 
+from . import views
 
 app_name = "core_apps.profiles"
 
