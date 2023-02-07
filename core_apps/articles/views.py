@@ -1,5 +1,5 @@
 import logging
-
+from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, generics, permissions, status
@@ -7,6 +7,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.mixins import UpdateModelMixin
 from . import pagination
 
 
@@ -16,11 +17,7 @@ from .import exceptions
 from .filters import ArticleFilter
 from .permissions import IsOwnerOrReadOnly
 from .renderers import ArticleJSONRenderer, ArticlesJSONRenderer
-from .serializers import (
-    ArticleCreateSerializer,
-    ArticleSerializer,
-    ArticleUpdateSerializer,
-)
+from . import serializers
 from rest_framework.pagination import PageNumberPagination
 
 User = get_user_model()
@@ -29,12 +26,12 @@ logger = logging.getLogger(__name__)
 
 
 class ArticleListAPIView(generics.ListAPIView):
-    serializer_class = ArticleSerializer
+    serializer_class = serializers.ArticleSerializer
     permission_classes = [
         permissions.IsAuthenticated,
     ]
     queryset = Article.objects.all()
-    renderer_classes = (ArticlesJSONRenderer,)
+    renderer_classes = (ArticlesJSONRenderer)
     pagination_class = pagination.ArticlePagination
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     filterset_class = ArticleFilter
@@ -46,7 +43,7 @@ class ArticleCreateAPIView(generics.CreateAPIView):
     permission_classes = [
         permissions.IsAuthenticated,
     ]
-    serializer_class = ArticleCreateSerializer
+    serializer_class = serializers.ArticleCreateSerializer
     renderer_classes = [ArticleJSONRenderer]
 
     def create(self, request, *args, **kwargs):
@@ -67,7 +64,7 @@ class ArticleDetailView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, slug):
-        article = Article.objects.get(slug=slug)
+        article = get_object_or_404(Article, slug=slug)
         x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
         if x_forwarded_for:
             ip = x_forwarded_for.split(",")[0]
@@ -80,29 +77,30 @@ class ArticleDetailView(APIView):
             article.views += 1
             article.save()
 
-        serializer = ArticleSerializer(article, context={"request": request})
+        serializer = serializers.ArticleSerializer(article, context={"request": request})
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-@api_view(["PATCH"])
-@permission_classes([permissions.IsAuthenticated])
-def update_article_api_view(request, slug):
-    try:
-        article = Article.objects.get(slug=slug)
-    except Article.DoesNotExist:
-        raise NotFound("That article does not exist in our catalog")
 
-    user = request.user
-    if article.author != user:
-        raise exceptions.UpdateArticle
 
-    if request.method == "PATCH":
-        data = request.data
-        serializer = ArticleUpdateSerializer(article, data=data, many=False)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+class UpdateArticle(APIView):
+  serializer_class = serializers.ArticleUpdateSerializer
+  lookup_field = "slug"
+  permission_classes = [permissions.IsAuthenticated]
+  
+  def put(self, request, slug):
+      article = get_object_or_404(Article, slug=slug)
+      if article is  None:
+          raise NotFound("The article doesnt exist in our catalog")
+      user = request.user
+      if article.author != user:
+          raise exceptions.UpdateArticle
+      
+      serializer = serializers.ArticleUdateSerializer(article, data=request.data, many=False)
+      serializer.is_valid(raise_exception=True)
+      serializer.save()
+      return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
 
 
 class ArticleDeleteAPIView(generics.DestroyAPIView):
@@ -111,11 +109,11 @@ class ArticleDeleteAPIView(generics.DestroyAPIView):
     lookup_field = "slug"
 
     def delete(self, request, *args, **kwargs):
-        try:
-            article = Article.objects.get(slug=self.kwargs.get("slug"))
-        except Article.DoesNotExist:
-            raise NotFound("That article does not exist in our catalog")
 
+        article = self.get_object()
+
+        if article is None:
+            raise NotFound("That article does not exist in our catalog")
         delete_operation = self.destroy(request)
         data = {}
         if delete_operation:
