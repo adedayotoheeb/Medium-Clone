@@ -2,7 +2,6 @@
 
 This application clones some of the features of medium. It was built using Django and Django Rest Framework.
 ___
-___
 
 ```python
 """To run the server."""

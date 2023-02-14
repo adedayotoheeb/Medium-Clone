@@ -5,7 +5,7 @@ from django.db.models import Avg
 from django.utils.translation import gettext_lazy as _
 
 from core_apps.common.models import TimeStampedUUIDModel
-from core_apps.ratings.models import Rating
+from core_apps.ratings import models as rating_model
 
 from .read_time_engine import ArticleReadTimeEngine
 
@@ -53,7 +53,7 @@ class Article(TimeStampedUUIDModel):
     def get_average_rating(self):
         if Rating.objects.all().count() > 0:
             rating = (
-                Rating.objects.filter(article=self.pkid).all().aggregate(Avg("value"))
+                rating_model.Rating.objects.filter(article=self.pkid).all().aggregate(Avg("value"))
             )
             return round(rating["value__avg"], 1) if rating["value__avg"] else 0
         return 0
