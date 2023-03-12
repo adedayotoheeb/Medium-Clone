@@ -51,7 +51,7 @@ class Article(TimeStampedUUIDModel):
         return time_to_read.get_read_time()
 
     def get_average_rating(self):
-        if Rating.objects.all().count() > 0:
+        if rating_model.Rating.objects.all().count() > 0:
             rating = (
                 rating_model.Rating.objects.filter(article=self.pkid).all().aggregate(Avg("value"))
             )

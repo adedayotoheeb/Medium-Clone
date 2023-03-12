@@ -1,24 +1,22 @@
 import logging
-from django.shortcuts import get_object_or_404
+
 from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, generics, permissions, status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import NotFound
+from rest_framework.mixins import UpdateModelMixin
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.mixins import UpdateModelMixin
-from . import pagination
-
 
 from core_apps.articles.models import Article, ArticleViews
 
-from .import exceptions
+from . import exceptions, pagination, serializers
 from .filters import ArticleFilter
 from .permissions import IsOwnerOrReadOnly
 from .renderers import ArticleJSONRenderer, ArticlesJSONRenderer
-from . import serializers
-from rest_framework.pagination import PageNumberPagination
 
 User = get_user_model()
 
@@ -80,8 +78,7 @@ class ArticleDetailView(APIView):
         serializer = serializers.ArticleSerializer(article, context={"request": request})
 
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-
+    
 
 
 class UpdateArticle(APIView):
@@ -118,7 +115,6 @@ class ArticleDeleteAPIView(generics.DestroyAPIView):
         data = {}
         if delete_operation:
             data["success"] = "Deletion was successful"
-
         else:
             data["failure"] = "Deletion failed"
 
