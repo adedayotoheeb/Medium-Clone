@@ -9,7 +9,7 @@ from rest_framework.exceptions import NotFound
 from rest_framework.mixins import UpdateModelMixin
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework.generics import UpdateAPIView, RetrieveAPIView
 
 from core_apps.articles.models import Article, ArticleViews
 
@@ -29,7 +29,7 @@ class ArticleListAPIView(generics.ListAPIView):
         permissions.IsAuthenticated,
     ]
     queryset = Article.objects.all()
-    renderer_classes = (ArticlesJSONRenderer)
+    renderer_classes = [ArticlesJSONRenderer]
     pagination_class = pagination.ArticlePagination
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     filterset_class = ArticleFilter
@@ -57,12 +57,13 @@ class ArticleCreateAPIView(generics.CreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class ArticleDetailView(APIView):
+class ArticleDetailView(RetrieveAPIView):
     renderer_classes = [ArticleJSONRenderer]
     permission_classes = [permissions.IsAuthenticated]
+    lookup_field =  "slug"
 
-    def get(self, request, slug):
-        article = get_object_or_404(Article, slug=slug)
+    def get(self, request, *args, **kwargs):
+        article = get_object_or_404(Article, slug=self.kwargs["slug"])
         x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
         if x_forwarded_for:
             ip = x_forwarded_for.split(",")[0]
@@ -81,20 +82,20 @@ class ArticleDetailView(APIView):
     
 
 
-class UpdateArticle(APIView):
+class UpdateArticle(UpdateAPIView):
   serializer_class = serializers.ArticleUpdateSerializer
   lookup_field = "slug"
   permission_classes = [permissions.IsAuthenticated]
   
-  def put(self, request, slug):
-      article = get_object_or_404(Article, slug=slug)
+  def put(self, request, *args, **kwargs):
+      article = get_object_or_404(Article, slug=self.kwargs["slug"])
       if article is  None:
           raise NotFound("The article doesnt exist in our catalog")
       user = request.user
       if article.author != user:
           raise exceptions.UpdateArticle
       
-      serializer = serializers.ArticleUdateSerializer(article, data=request.data, many=False)
+      serializer = serializers.ArticleUpdateSerializer(article, data=request.data, many=False)
       serializer.is_valid(raise_exception=True)
       serializer.save()
       return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
